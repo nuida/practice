@@ -19,6 +19,22 @@ std::vector<bool> enc( std::vector<bool> m, std::vector<bool> key ) {
   return res;
 }
 
+std::vector<bool> dec( std::vector<bool> c, std::vector<bool> key ) {
+  using namespace std;
+  vector<bool>::iterator it_c, it_key;
+  vector<bool> res;
+  for ( it_c = c.begin(), it_key = key.begin();
+	it_c != c.end(); it_c++ ) {
+    if ( it_key == key.end() ) {
+      res.push_back( *it_c );
+    } else {
+      res.push_back( *it_c ^ *it_key );
+      it_key++;
+    }
+  }
+  return res;
+}
+
 std::vector<bool> s_to_b ( std::string str ) {
   using namespace std;
   vector<bool> res;
