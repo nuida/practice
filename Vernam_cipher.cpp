@@ -19,20 +19,21 @@ std::vector<bool> enc( std::vector<bool> m, std::vector<bool> key ) {
   return res;
 }
 
-std::vector<bool> dec( std::vector<bool> c, std::vector<bool> key ) {
+bool dec( std::vector<bool>& m, std::vector<bool> c, std::vector<bool> key ) {
   using namespace std;
   vector<bool>::iterator it_c, it_key;
-  vector<bool> res;
+  vector<bool>::iterator it_m;
+  m.clear();
   for ( it_c = c.begin(), it_key = key.begin();
 	it_c != c.end(); it_c++ ) {
     if ( it_key == key.end() ) {
-      res.push_back( *it_c );
+      return false;
     } else {
-      res.push_back( *it_c ^ *it_key );
+      m.push_back( *it_c ^ *it_key );
       it_key++;
     }
   }
-  return res;
+  return true;
 }
 
 std::vector<bool> s_to_b ( std::string str ) {
