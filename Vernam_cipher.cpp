@@ -1,4 +1,5 @@
 #include<iostream>
+#include<fstream>
 #include<vector>
 
 // #define MAX_M_LENGTH 100
@@ -18,24 +19,6 @@ bool enc( std::vector<bool>& c, std::vector<bool> m, std::vector<bool> key ) {
   }
   return true;
 }
-
-/*
-std::vector<bool> enc( std::vector<bool> m, std::vector<bool> key ) {
-  using namespace std;
-  vector<bool>::iterator it_m, it_key;
-  vector<bool> res;
-  for ( it_m = m.begin(), it_key = key.begin();
-	it_m != m.end(); it_m++ ) {
-    if ( it_key == key.end() ) {
-      res.push_back( *it_m );
-    } else {
-      res.push_back( *it_m ^ *it_key );
-      it_key++;
-    }
-  }
-  return res;
-}
-*/
 
 bool dec( std::vector<bool>& m, std::vector<bool> c, std::vector<bool> key ) {
   using namespace std;
@@ -80,13 +63,21 @@ int main( int argc, char* argv[] ) {
   std::cin >> input_key;
   key = s_to_b( input_key );
   if ( enc( c, m, key ) ) {
-    for ( it_c = c.begin(); it_c != c.end(); it_c++ ) {
-      std::cout << *it_c;
+    std::ofstream fout( "ciphertext_Vernam.dat", std::ios::app );
+    if ( !fout ) {
+      std::cerr << "Couldn't open the output file." << std::endl;
+      return 1;
     }
+    for ( it_c = c.begin(); it_c != c.end(); it_c++ ) {
+      fout << *it_c;
+    }
+    fout << std::endl;
+    fout.close();
+    std::cout << "Encryption succeeded." << std::endl;
   } else {
-    std::cout << "Encryption failed.";
+    std::cerr << "Encryption failed." << std::endl;
+    return 1;
   }
-  std::cout << std::endl;
   return 0;
 }
 
