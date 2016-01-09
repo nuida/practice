@@ -1,6 +1,7 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
+#include<string>
 
 // #define MAX_M_LENGTH 100
 
@@ -11,6 +12,7 @@ bool enc( std::vector<bool>& c, std::vector<bool> m, std::vector<bool> key ) {
   for ( it_m = m.begin(), it_key = key.begin();
 	it_m != m.end(); it_m++ ) {
     if ( it_key == key.end() ) {
+      cerr << "Too short encryption key: Abort." << endl;
       return false;
     } else {
       c.push_back( *it_m ^ *it_key );
@@ -48,8 +50,6 @@ std::vector<bool> s_to_b ( std::string str ) {
 }
 
 int main( int argc, char* argv[] ) {
-  std::string input_m;
-  std::string::iterator it_input_m;
   std::string input_key;
   std::string::iterator it_input_key;
   std::vector<bool> m;
@@ -58,22 +58,39 @@ int main( int argc, char* argv[] ) {
   std::vector<bool>::iterator it_key;
   std::vector<bool> c;
   std::vector<bool>::iterator it_c;
-  std::cin >> input_m;
-  m = s_to_b( input_m );
+  char ch;
+
+  std::string input_file_name( "plaintext_Vernam.dat" );
+  std::ifstream fin( input_file_name.c_str(), std::ios::in );
+  if ( !fin ) {
+    std::cerr << "Can't open the input file \""
+	      << input_file_name.c_str() << "\"." << std::endl;
+    return 1;
+  }
+  while ( fin.get(ch) ) {
+    if ( ch != '\n' ) {
+      m.push_back( ch != '0' );
+    }
+  }
+
+  std::cout << "Input encryption key ( length >= " << m.size() << " )" << std::endl;
   std::cin >> input_key;
   key = s_to_b( input_key );
+
+  std::string output_file_name( "ciphertext_Vernam.dat" );
   if ( enc( c, m, key ) ) {
-    std::ofstream fout( "ciphertext_Vernam.dat", std::ios::app );
+    std::ofstream fout( output_file_name.c_str(), std::ios::app );
     if ( !fout ) {
-      std::cerr << "Couldn't open the output file." << std::endl;
+      std::cerr << "Can't open the output file \""
+		<< output_file_name.c_str() << "\"." << std::endl;
       return 1;
     }
     for ( it_c = c.begin(); it_c != c.end(); it_c++ ) {
       fout << *it_c;
     }
     fout << std::endl;
-    fout.close();
-    std::cout << "Encryption succeeded." << std::endl;
+    std::cout << "Encryption succeeded: Ciphertext file \""
+	      << output_file_name.c_str() << "\"." << std::endl;
   } else {
     std::cerr << "Encryption failed." << std::endl;
     return 1;
