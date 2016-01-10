@@ -1,4 +1,4 @@
 # practice
 practice for programming (and using Git)
 
-push test
+Note: NTL_practice.cpp uses Number Theory Library (NTL)
