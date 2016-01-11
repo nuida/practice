@@ -2,12 +2,35 @@
 #include <fstream>
 #include <string>
 #include <NTL/ZZ.h>
+#include <vector>
 
 NTL::ZZ str_to_ZZ( std::string& str ) {
   std::string::iterator it_str;
   NTL::ZZ res;
   for ( it_str = str.begin(); it_str != str.end(); it_str++ ) {
     res = res * 256 + unsigned(*it_str);
+  }
+  return res;
+}
+
+std::vector< NTL::ZZ > str_to_ZZtuple ( std::string& str, unsigned bitlength ) {
+  std::vector< NTL::ZZ > res;
+  NTL::ZZ res_cur;
+  std::string::iterator it_str;
+  int i, char_max;
+  const unsigned bytes = (bitlength - 1) / (sizeof(char) * 8);
+
+  char_max = 1;
+  for ( i = 0; i < sizeof(char) * 8; i++ ) {
+    char_max *= 2;
+  }
+  it_str = str.begin();
+  while ( it_str != str.end() ) {
+    res_cur = 0;
+    for ( i = 0; i < bytes && it_str != str.end() ; i++, it_str++ ) {
+      res_cur = res_cur * char_max + unsigned( *it_str );
+    }
+    res.push_back( res_cur );
   }
   return res;
 }
@@ -24,12 +47,18 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 int main( int argc, char* argv[] ) {
   NTL::ZZ a;
   std::string input_str;
-  //  std::cin >> a;
-  //  std::cout << a/sizeof(unsigned char) << std::endl;
+  unsigned bitlength;
+  std::vector< NTL::ZZ > zz_tuple;
+  std::vector< NTL::ZZ >::iterator it_zz_tuple;
+
+  std::cout << "bit length of N = ? ";
+  std::cin >> bitlength;
+  std::cout << "string = ? ";
   std::cin >> input_str;
-  std::cout << str_to_ZZ( input_str ) << std::endl;
-  std::cin >> a;
-  std::cout << ZZ_to_str( a ) << std::endl;
-  //  std::cout << unsigned(*input_str.begin()) << std::endl;
+  zz_tuple = str_to_ZZtuple( input_str, bitlength );
+  for ( it_zz_tuple = zz_tuple.begin();
+	it_zz_tuple != zz_tuple.end(); it_zz_tuple++ ) {
+    std::cout << *it_zz_tuple << std::endl;
+  }
   return 0;
 }
