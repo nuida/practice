@@ -35,6 +35,33 @@ std::vector< NTL::ZZ > str_to_ZZtuple ( std::string& str, unsigned bitlength ) {
   return res;
 }
 
+std::vector< NTL::ZZ > file_to_ZZtuple ( std::ifstream& fin, unsigned bitlength ) {
+  std::vector< NTL::ZZ > res;
+  NTL::ZZ res_cur;
+  int i, char_max;
+  const unsigned bytes = (bitlength - 1) / (sizeof(char) * 8);
+  char in_char;
+
+  char_max = 1;
+  for ( i = 0; i < sizeof(char) * 8; i++ ) {
+    char_max *= 2;
+  }
+  res_cur = 0;
+  i = 0;
+  while ( fin.get( in_char ) ) {
+    if ( i < bytes ) {
+      res_cur = res_cur * char_max + unsigned( in_char );
+      ++i;
+    } else {
+      res.push_back( res_cur );
+      res_cur = unsigned( in_char );
+      i = 1;
+    }
+  }
+  res.push_back( res_cur );
+  return res;
+}
+
 std::string ZZ_to_str( NTL::ZZ zz ) {
   std::string res;
   while ( zz > 0 ) {
@@ -45,17 +72,22 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 }
 
 int main( int argc, char* argv[] ) {
-  NTL::ZZ a;
-  std::string input_str;
+  //  NTL::ZZ a;
+  std::string file_name;
   unsigned bitlength;
   std::vector< NTL::ZZ > zz_tuple;
   std::vector< NTL::ZZ >::iterator it_zz_tuple;
 
   std::cout << "bit length of N = ? ";
   std::cin >> bitlength;
-  std::cout << "string = ? ";
-  std::cin >> input_str;
-  zz_tuple = str_to_ZZtuple( input_str, bitlength );
+  std::cout << "input file name = ? ";
+  std::cin >> file_name;
+  std::ifstream fin( file_name.c_str(), std::ios::in );
+  if ( !fin ) {
+    std::cerr << "Can't open the file: " << file_name << std::endl;
+    return 1;
+  }
+  zz_tuple = file_to_ZZtuple( fin, bitlength );
   for ( it_zz_tuple = zz_tuple.begin();
 	it_zz_tuple != zz_tuple.end(); it_zz_tuple++ ) {
     std::cout << *it_zz_tuple << std::endl;
