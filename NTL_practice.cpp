@@ -73,24 +73,38 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 
 int main( int argc, char* argv[] ) {
   //  NTL::ZZ a;
-  std::string file_name;
+  std::string ifile_name, ofile_name;
   unsigned bitlength;
   std::vector< NTL::ZZ > zz_tuple;
   std::vector< NTL::ZZ >::iterator it_zz_tuple;
 
   std::cout << "bit length of N = ? ";
   std::cin >> bitlength;
-  std::cout << "input file name = ? ";
-  std::cin >> file_name;
-  std::ifstream fin( file_name.c_str(), std::ios::in );
+  //  std::cout << "input file name = ? ";
+  //  std::cin >> ifile_name;
+  ifile_name = "NTL_practice_input.dat";
+  std::ifstream fin( ifile_name.c_str(), std::ios::in );
   if ( !fin ) {
-    std::cerr << "Can't open the file: " << file_name << std::endl;
+    std::cerr << "Can't open the file: " << ifile_name << std::endl;
     return 1;
   }
   zz_tuple = file_to_ZZtuple( fin, bitlength );
+  /*
   for ( it_zz_tuple = zz_tuple.begin();
 	it_zz_tuple != zz_tuple.end(); it_zz_tuple++ ) {
     std::cout << *it_zz_tuple << std::endl;
   }
+  */
+  ofile_name = "NTL_practice_output.dat";
+  std::ofstream fout( ofile_name.c_str(), std::ios::out );
+  if ( !fout ) {
+    std::cerr << "Can't open the file: " << ofile_name << std::endl;
+    return 1;
+  }
+  for ( it_zz_tuple = zz_tuple.begin();
+	it_zz_tuple != zz_tuple.end(); it_zz_tuple++ ) {
+    fout << *it_zz_tuple << std::endl;
+  }
+
   return 0;
 }
