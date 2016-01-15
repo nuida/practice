@@ -72,7 +72,15 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 }
 
 int main( int argc, char* argv[] ) {
-  //  NTL::ZZ a;
+
+  NTL::ZZ a, n;
+  while ( !( std::cin >> n ) ) {}
+  a = NTL::RandomBnd(n);
+  std::cout << a << std::endl;
+
+  return 0;
+
+  // temporarily disabled below
   std::string ifile_name, ofile_name;
   unsigned bitlength;
   std::vector< NTL::ZZ > zz_tuple;
