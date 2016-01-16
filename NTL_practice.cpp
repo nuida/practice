@@ -73,10 +73,18 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 
 int main( int argc, char* argv[] ) {
 
+  NTL::ZZ p;
+  long l;
+  while ( !( std::cin >> l ) ) {}
+  NTL::GenPrime( p, l );
+  std::cout << p << std::endl;
+
+  /*
   NTL::ZZ a, n;
   while ( !( std::cin >> n ) ) {}
   a = NTL::RandomBnd(n);
   std::cout << a << std::endl;
+  */
 
   return 0;
 
