@@ -4,6 +4,8 @@
 #include <NTL/ZZ.h>
 #include <vector>
 
+#define MaxBitLength 512
+
 NTL::ZZ str_to_ZZ( std::string& str ) {
   std::string::iterator it_str;
   NTL::ZZ res;
@@ -75,7 +77,16 @@ int main( int argc, char* argv[] ) {
 
   NTL::ZZ p;
   long l;
-  while ( !( std::cin >> l ) ) {}
+
+  if ( argc == 1 ) {
+    while ( !( std::cin >> l ) ) {}
+  } else {
+    l = std::atol( argv[1] );
+    if ( l <= 0 || l > MaxBitLength ) {
+      std::cerr << "Too long bit length: Abort." << std::endl;
+      return 1;
+    }
+  }
   NTL::GenPrime( p, l );
   std::cout << p << std::endl;
 
