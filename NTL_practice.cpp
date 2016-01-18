@@ -77,10 +77,20 @@ int main( int argc, char* argv[] ) {
 
   NTL::ZZ p;
   long l;
+  bool chk;
+  int i;
 
   if ( argc == 1 ) {
     while ( !( std::cin >> l ) ) {}
   } else {
+    chk = true;
+    for ( i = 0; chk && argv[1][i] != '\n'; ++i ) {
+      chk = ( argv[1][i] >= '0' && argv[1][i] <= '9' );
+    }
+    if ( !chk ) {
+      std::cerr << "Invalid argument: Abort." << std::endl;
+      return 1;
+    }
     l = std::atol( argv[1] );
     if ( l <= 0 || l > MaxBitLength ) {
       std::cerr << "Too long bit length: Abort." << std::endl;
