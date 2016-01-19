@@ -75,7 +75,7 @@ std::string ZZ_to_str( NTL::ZZ zz ) {
 
 int main( int argc, char* argv[] ) {
 
-  NTL::ZZ p;
+  NTL::ZZ p,q,N;
   long l;
   bool chk;
   int i;
@@ -84,7 +84,7 @@ int main( int argc, char* argv[] ) {
     while ( !( std::cin >> l ) ) {}
   } else {
     chk = true;
-    for ( i = 0; chk && argv[1][i] != '\n'; ++i ) {
+    for ( i = 0; chk && argv[1][i] != '\0'; ++i ) {
       chk = ( argv[1][i] >= '0' && argv[1][i] <= '9' );
     }
     if ( !chk ) {
@@ -92,13 +92,19 @@ int main( int argc, char* argv[] ) {
       return 1;
     }
     l = std::atol( argv[1] );
-    if ( l <= 0 || l > MaxBitLength ) {
-      std::cerr << "Too long bit length: Abort." << std::endl;
+    if ( l <= 2 || l > MaxBitLength ) {
+      std::cerr << "Out-of-support bit length: Abort." << std::endl;
       return 1;
     }
   }
-  NTL::GenPrime( p, l );
-  std::cout << p << std::endl;
+  chk = false;
+  while ( !chk ) {
+    NTL::GenPrime( p, l );
+    NTL::GenPrime( q, l );
+    chk = ( p != q );
+  }
+  N = p * q;
+  std::cout << p << ", " << q << ", " << N << std::endl;
 
   /*
   NTL::ZZ a, n;
