@@ -78,10 +78,11 @@ int main( int argc, char* argv[] ) {
   NTL::ZZ p,q,N;
   long l;
   bool chk;
-  int i;
+  int i,s;
 
   if ( argc == 1 ) {
     while ( !( std::cin >> l ) ) {}
+    while ( !( std::cin >> s ) ) {}
   } else {
     chk = true;
     for ( i = 0; chk && argv[1][i] != '\0'; ++i ) {
@@ -97,13 +98,30 @@ int main( int argc, char* argv[] ) {
       return 1;
     }
   }
+  if ( argc == 2 ) {
+    s = 2;
+  } else {
+    chk = true;
+    for ( i = 0; chk && argv[2][i] != '\0'; ++i ) {
+      chk = ( argv[2][i] >= '0' && argv[2][i] <= '9' );
+    }
+    if ( !chk ) {
+      std::cerr << "Invalid argument: Abort." << std::endl;
+      return 1;
+    }
+    s = std::atoi( argv[2] );
+  }
+
   chk = false;
   while ( !chk ) {
     NTL::GenPrime( p, l );
     NTL::GenPrime( q, l );
     chk = ( p != q );
   }
-  N = p * q;
+  N = 1;
+  for ( i = 0; i < s; ++i ) {
+    N *= p * q;
+  }
   std::cout << p << ", " << q << ", " << N << std::endl;
 
   /*
